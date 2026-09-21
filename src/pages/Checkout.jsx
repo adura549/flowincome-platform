@@ -72,6 +72,9 @@ export default function Checkout() {
     const res = await verifyOnServer(ref, transactionId);
     if (res.ok) {
       window.location.href = "/payment/success?ref=" + ref + "&course=" + (res.slug || course.slug);
+    } else if (res.pending) {
+      setStatus(res.error + " Your reference is " + ref + ".");
+      setPaying(false);
     } else {
       setStatus("");
       setErr(res.error || "Something went wrong confirming your payment.");
@@ -227,6 +230,9 @@ export default function Checkout() {
 
             <p className="text-[11px] text-muted text-center mt-3 leading-relaxed">
               Secure payment by Flutterwave. Card, bank transfer and USSD accepted.
+            </p>
+            <p className="text-[11px] text-muted text-center mt-2 leading-relaxed">
+              By paying you agree to our <Link to="/terms" className="text-gold hover:underline">Terms</Link> and <Link to="/refunds" className="text-gold hover:underline">Refund Policy</Link>.
             </p>
           </div>
         </div>

@@ -17,6 +17,9 @@ import Dashboard from "./pages/Dashboard";
 import Learn from "./pages/Learn";
 import Affiliate from "./pages/Affiliate";
 import Certificate from "./pages/Certificate";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import { Terms, Privacy, Refunds } from "./pages/Legal";
 
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminHome from "./pages/admin/AdminHome";
@@ -70,6 +73,11 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/affiliate" element={<Affiliate />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/refunds" element={<Refunds />} />
           <Route path="/verify/:code" element={<Certificate />} />
           <Route path="/certificate/:code" element={<Certificate />} />
 

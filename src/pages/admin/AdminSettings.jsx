@@ -27,6 +27,9 @@ export default function AdminSettings() {
       min_payout_ngn: Number(s.min_payout_ngn || 0),
       instructor_name: s.instructor_name,
       instructor_title: s.instructor_title,
+      support_whatsapp: (s.support_whatsapp || "").replace(/[^0-9]/g, ""),
+      support_email: s.support_email || null,
+      legal_entity: s.legal_entity || "Flow Income Academy",
     }).eq("id", 1);
     setBusy(false);
     setMsg(error ? "Error: " + error.message : "Saved.");
@@ -83,6 +86,28 @@ export default function AdminSettings() {
           <label className="label">Minimum payout (Naira)</label>
           <input className="field" type="number" value={s.min_payout_ngn ?? ""}
             onChange={(e) => set("min_payout_ngn", e.target.value)} />
+        </div>
+      </div>
+
+      <div className="panel p-6 space-y-4">
+        <h3 className="font-bold text-white">Support and legal</h3>
+        <div>
+          <label className="label">Support WhatsApp number</label>
+          <input className="field" value={s.support_whatsapp || ""}
+            onChange={(e) => set("support_whatsapp", e.target.value)} placeholder="2349162492368" />
+          <p className="text-xs text-white/30 mt-1.5">Country code first, no plus sign or spaces. Shown in the footer and policy pages.</p>
+        </div>
+        <div>
+          <label className="label">Support email (optional)</label>
+          <input className="field" value={s.support_email || ""}
+            onChange={(e) => set("support_email", e.target.value)} placeholder="hello@flowincome.site" />
+          <p className="text-xs text-white/30 mt-1.5">Only fill this in once the mailbox actually receives mail.</p>
+        </div>
+        <div>
+          <label className="label">Business name on policy pages</label>
+          <input className="field" value={s.legal_entity || ""}
+            onChange={(e) => set("legal_entity", e.target.value)} />
+          <p className="text-xs text-white/30 mt-1.5">Use your registered business name if the academy runs under one.</p>
         </div>
       </div>
 

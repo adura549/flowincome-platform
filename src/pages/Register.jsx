@@ -72,6 +72,9 @@ export default function Register() {
           <button className="btn-gold w-full" disabled={busy}>
             {busy ? "Creating account..." : "Create account"}
           </button>
+          <p className="text-xs text-muted text-center leading-relaxed">
+            By creating an account you agree to our <Link to="/terms" className="text-gold hover:underline">Terms</Link> and <Link to="/privacy" className="text-gold hover:underline">Privacy Policy</Link>.
+          </p>
         </form>
 
         <p className="text-sm text-muted text-center mt-6">

@@ -95,6 +95,7 @@ export default function Affiliate() {
     const v = await verifyOnServer(ref, res.transactionId);
     setMsg("");
     setBusy(false);
+    if (v.pending) return setMsg(v.error);
     if (!v.ok) return setErr(v.error || "Could not confirm payment.");
     load();
   }

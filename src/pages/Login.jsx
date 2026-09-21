@@ -35,7 +35,10 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div>
-            <label className="label">Password</label>
+            <div className="flex justify-between items-baseline">
+              <label className="label">Password</label>
+              <Link to="/forgot-password" className="text-xs text-gold hover:underline">Forgot password?</Link>
+            </div>
             <input className="field" type="password" required value={password}
               onChange={(e) => setPassword(e.target.value)} />
           </div>
