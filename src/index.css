@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+
+html, body, #root { min-height: 100%; }
+
+body {
+  margin: 0;
+  background: #0B0E11;
+  color: #E8E8E8;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #0B0E11; }
+::-webkit-scrollbar-thumb { background: #222c3a; border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: #2e3a4d; }
+
+@layer components {
+  .btn-gold {
+    @apply bg-gold text-black font-extrabold rounded-lg px-5 py-3
+           hover:bg-gold2 transition disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-ghost {
+    @apply border border-white/10 text-white font-semibold rounded-lg px-5 py-3
+           hover:border-gold hover:text-gold transition;
+  }
+  .field {
+    @apply w-full bg-[#0E1520] border border-white/10 rounded-lg px-4 py-3
+           text-white outline-none focus:border-gold transition;
+  }
+  .label { @apply block text-sm text-muted mb-1.5; }
+  .panel { @apply bg-card border border-white/[0.07] rounded-2xl; }
+  .chip  { @apply text-[11px] font-bold px-2.5 py-1 rounded-full; }
+}
+
+/* ---------- LESSON CONTENT ---------- */
+@layer components {
+  .lesson-body h2 { @apply text-xl font-bold text-white mt-7 mb-3; }
+  .lesson-body h3 { @apply text-lg font-bold text-white mt-6 mb-2.5; }
+  .lesson-body p  { @apply mb-4 leading-relaxed; }
+  .lesson-body ul { @apply list-disc pl-5 mb-4 space-y-1.5; }
+  .lesson-body ol { @apply list-decimal pl-5 mb-4 space-y-1.5; }
+  .lesson-body li { @apply leading-relaxed; }
+  .lesson-body strong { @apply text-white font-semibold; }
+  .lesson-body a { @apply text-gold underline; }
+
+  .lesson-body table { @apply w-full text-sm my-5 border-collapse block overflow-x-auto; }
+  .lesson-body th { @apply bg-gold/10 text-gold font-semibold text-left p-3 border border-white/10 whitespace-nowrap; }
+  .lesson-body td { @apply p-3 border border-white/5 align-top; }
+
+  .lesson-body .box  { @apply bg-card border border-white/[0.07] rounded-2xl p-5 my-5; }
+  .lesson-body .tip  { @apply bg-mint/[0.07] border border-mint/25 rounded-2xl p-5 my-5; }
+  .lesson-body .warn { @apply bg-red-500/[0.07] border border-red-500/25 rounded-2xl p-5 my-5; }
+  .lesson-body .task { @apply bg-gold/[0.07] border border-gold/30 rounded-2xl p-5 my-5; }
+
+  .lesson-body .tip strong  { @apply text-mint; }
+  .lesson-body .warn strong { @apply text-red-300; }
+  .lesson-body .task strong { @apply text-gold; }
+}
