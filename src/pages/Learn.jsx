@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 
@@ -13,6 +13,10 @@ export default function Learn() {
   const [active, setActive] = useState(0);
   const [allowed, setAllowed] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [cert, setCert] = useState(null);
+  const [certErr, setCertErr] = useState("");
+  const [certBusy, setCertBusy] = useState(false);
+  const nav = useNavigate();
 
   useEffect(() => {
     if (!user) return;
@@ -38,6 +42,11 @@ export default function Learn() {
 
       setLessons(ls || []);
       setDone(new Set((pr || []).map((p) => p.lesson_id)));
+
+      const { data: ce } = await supabase
+        .from("certificates").select("code")
+        .eq("user_id", user.id).eq("course_id", c.id).maybeSingle();
+      setCert(ce?.code || null);
       setLoading(false);
     })();
   }, [slug, user]);
@@ -50,6 +59,14 @@ export default function Learn() {
       lesson_id: lesson.id,
       course_id: course.id,
     });
+  }
+
+  async function claimCert() {
+    setCertErr(""); setCertBusy(true);
+    const { data, error } = await supabase.rpc("claim_certificate", { p_course: course.id });
+    setCertBusy(false);
+    if (error) return setCertErr(error.message);
+    nav("/verify/" + data);
   }
 
   if (loading) {
@@ -116,6 +133,13 @@ export default function Learn() {
             Access link not set yet. Please contact support.
           </p>
         )}
+        {cert && (
+          <div className="mt-6">
+            <Link to={"/verify/" + cert} className="btn-ghost inline-block text-sm">
+              View your certificate
+            </Link>
+          </div>
+        )}
         <div className="mt-8">
           <Link to="/dashboard" className="text-sm text-muted hover:text-white">
             Back to my courses
@@ -145,6 +169,23 @@ export default function Learn() {
           </div>
         )}
       </div>
+
+      {lessons.length > 0 && done.size >= lessons.length && (
+        <div className="panel p-5 mb-6 border-mint/30 flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <div className="font-bold text-white">You finished the course</div>
+            <div className="text-sm text-muted">Your certificate is ready. Anyone can verify it with its code or QR.</div>
+            {certErr && <div className="text-sm text-red-400 mt-1">{certErr}</div>}
+          </div>
+          {cert ? (
+            <Link to={"/verify/" + cert} className="btn-gold text-sm py-2 px-4 shrink-0">View certificate</Link>
+          ) : (
+            <button onClick={claimCert} disabled={certBusy} className="btn-gold text-sm py-2 px-4 shrink-0">
+              {certBusy ? "Preparing..." : "Get your certificate"}
+            </button>
+          )}
+        </div>
+      )}
 
       {hasLinkAndLessons && (
         <div className="panel p-4 mb-6 flex items-center justify-between gap-4 flex-wrap border-gold/25">

@@ -1,4 +1,6 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { captureRef } from "./lib/ref";
 import { useAuth } from "./context/AuthContext";
 
 import Navbar from "./components/Navbar";
@@ -13,6 +15,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Learn from "./pages/Learn";
+import Affiliate from "./pages/Affiliate";
+import Certificate from "./pages/Certificate";
 
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminHome from "./pages/admin/AdminHome";
@@ -20,6 +24,8 @@ import AdminCourses from "./pages/admin/AdminCourses";
 import CourseEditor from "./pages/admin/CourseEditor";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminStudents from "./pages/admin/AdminStudents";
+import AdminAffiliates from "./pages/admin/AdminAffiliates";
+import AdminSettings from "./pages/admin/AdminSettings";
 
 function Protected({ children }) {
   const { user, loading } = useAuth();
@@ -48,6 +54,9 @@ function Splash() {
 }
 
 export default function App() {
+  const location = useLocation();
+  useEffect(() => { captureRef(); }, [location.search]);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -60,6 +69,9 @@ export default function App() {
           <Route path="/payment/success" element={<PaymentSuccess />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/affiliate" element={<Affiliate />} />
+          <Route path="/verify/:code" element={<Certificate />} />
+          <Route path="/certificate/:code" element={<Certificate />} />
 
           <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
           <Route path="/learn/:slug" element={<Protected><Learn /></Protected>} />
@@ -71,6 +83,8 @@ export default function App() {
             <Route path="courses/:id" element={<CourseEditor />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="students" element={<AdminStudents />} />
+            <Route path="affiliates" element={<AdminAffiliates />} />
+            <Route path="settings" element={<AdminSettings />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

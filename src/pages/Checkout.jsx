@@ -3,24 +3,8 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { naira, txRef } from "../lib/format";
-
-async function verifyOnServer(ref, transactionId) {
-  const { data } = await supabase.auth.getSession();
-  const token = data?.session?.access_token;
-  try {
-    const r = await fetch("/.netlify/functions/verify-payment", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + (token || ""),
-      },
-      body: JSON.stringify({ tx_ref: ref, transaction_id: transactionId || null }),
-    });
-    return await r.json();
-  } catch {
-    return { ok: false, error: "Could not reach the payment server. Please try again." };
-  }
-}
+import { verifyOnServer, openFlutterwave } from "../lib/pay";
+import { getRef } from "../lib/ref";
 
 export default function Checkout() {
   const { slug } = useParams();
@@ -114,6 +98,7 @@ export default function Checkout() {
       currency: "NGN",
       tx_ref: ref,
       coupon_code: applied?.code || null,
+      ref_code: getRef(),
       status: "pending",
     });
 
@@ -129,40 +114,20 @@ export default function Checkout() {
       return;
     }
 
-    if (!window.FlutterwaveCheckout) {
-      setErr("Payment window did not load. Refresh the page and try again.");
-      setPaying(false);
-      return;
-    }
-
-    const modal = window.FlutterwaveCheckout({
-      public_key: import.meta.env.VITE_FLW_PUBLIC_KEY,
-      tx_ref: ref,
+    const res = await openFlutterwave({
+      ref,
       amount: total,
-      currency: "NGN",
-      payment_options: "card,banktransfer,ussd,account",
-      customer: {
-        email: form.email,
-        phone_number: form.phone,
-        name: form.name,
-      },
-      customizations: {
-        title: "Flow Income Academy",
-        description: course.title,
-      },
-      callback: async (res) => {
-        try { modal?.close?.(); } catch {}
-        if (res?.status === "successful" || res?.status === "completed") {
-          await finish(ref, res.transaction_id);
-        } else {
-          setErr("Payment was not completed.");
-          setPaying(false);
-        }
-      },
-      onclose: () => {
-        setPaying((p) => (status ? p : false));
-      },
+      customer: { email: form.email, phone_number: form.phone, name: form.name },
+      title: "Flow Income Academy",
+      description: course.title,
     });
+
+    if (res.transactionId) {
+      await finish(ref, res.transactionId);
+    } else {
+      if (res.error) setErr(res.error);
+      setPaying(false);
+    }
   }
 
   if (loading) return <div className="max-w-4xl mx-auto px-5 py-24 text-center text-muted">Loading...</div>;

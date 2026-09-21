@@ -7,7 +7,7 @@ const BLANK = {
   title: "", slug: "", short_desc: "", full_desc: "",
   what_you_learn: "", requirements: "",
   price_ngn: 0, compare_price: 0, emoji: "",
-  thumbnail_url: "", category_id: "", level: "Beginner",
+  thumbnail_url: "", promo_video_url: "", category_id: "", level: "Beginner",
   duration_text: "", lesson_count: 0,
   access_type: "lessons", access_url: "", access_note: "", access_button_label: "",
   legacy_file: "", legacy_code: "",
@@ -53,6 +53,7 @@ export default function CourseEditor() {
             access_url: c.access_url || "",
             access_note: c.access_note || "",
             access_button_label: c.access_button_label || "",
+            promo_video_url: c.promo_video_url || "",
           });
         }
         const { data: ls } = await supabase
@@ -79,6 +80,7 @@ export default function CourseEditor() {
       compare_price: Number(f.compare_price || 0) || null,
       emoji: f.emoji || null,
       thumbnail_url: f.thumbnail_url || null,
+      promo_video_url: f.promo_video_url || null,
       category_id: f.category_id || null,
       level: f.level,
       duration_text: f.duration_text || null,
@@ -187,6 +189,11 @@ export default function CourseEditor() {
               <Field label="Short description" hint="One or two lines. Shown on the course card.">
                 <textarea className="field" rows={2} value={f.short_desc}
                   onChange={(e) => set("short_desc", e.target.value)} />
+              </Field>
+              <Field label="Promo video link" hint="YouTube or TikTok link. It plays on the course sales page, under the title.">
+                <input className="field" value={f.promo_video_url}
+                  onChange={(e) => set("promo_video_url", e.target.value)}
+                  placeholder="https://www.youtube.com/watch?v=... or https://www.tiktok.com/@you/video/..." />
               </Field>
               <Field label="Full description" hint="Shown on the course sales page.">
                 <textarea className="field" rows={7} value={f.full_desc}

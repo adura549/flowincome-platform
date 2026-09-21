@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { naira } from "../lib/format";
+import { toEmbed } from "../lib/video";
 
 export default function CourseDetail() {
   const { slug } = useParams();
@@ -89,6 +90,25 @@ export default function CourseDetail() {
             </h1>
             <p className="text-lg text-muted leading-relaxed">{course.short_desc}</p>
           </div>
+
+          {(() => {
+            const v = toEmbed(course.promo_video_url);
+            if (!v) return null;
+            return (
+              <div className={v.vertical ? "max-w-sm mx-auto" : ""}>
+                <div className={"rounded-2xl overflow-hidden bg-black border border-white/10 " + (v.vertical ? "aspect-[9/16]" : "aspect-video")}>
+                  <iframe
+                    src={v.src}
+                    title="Course preview"
+                    className="w-full h-full"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            );
+          })()}
 
           {course.what_you_learn?.length > 0 && (
             <div className="panel p-6">

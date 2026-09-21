@@ -19,6 +19,8 @@ export default function AdminLayout() {
             <NavLink to="/admin/courses" className={link}>Courses</NavLink>
             <NavLink to="/admin/orders" className={link}>Orders</NavLink>
             <NavLink to="/admin/students" className={link}>Students</NavLink>
+            <NavLink to="/admin/affiliates" className={link}>Affiliates</NavLink>
+            <NavLink to="/admin/settings" className={link}>Settings</NavLink>
           </nav>
         </aside>
         <div className="lg:col-span-4">

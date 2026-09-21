@@ -27,6 +27,7 @@ export default function Navbar() {
           <NavLink to="/" end className={link}>Home</NavLink>
           <NavLink to="/courses" className={link}>All Courses</NavLink>
           {user && <NavLink to="/dashboard" className={link}>My Courses</NavLink>}
+          <NavLink to="/affiliate" className={link}>Earn 30%</NavLink>
           {isAdmin && <NavLink to="/admin" className={link}>Admin</NavLink>}
         </nav>
 
@@ -62,6 +63,7 @@ export default function Navbar() {
           <Link to="/" onClick={() => setOpen(false)} className="block py-2 text-muted">Home</Link>
           <Link to="/courses" onClick={() => setOpen(false)} className="block py-2 text-muted">All Courses</Link>
           {user && <Link to="/dashboard" onClick={() => setOpen(false)} className="block py-2 text-muted">My Courses</Link>}
+          <Link to="/affiliate" onClick={() => setOpen(false)} className="block py-2 text-muted">Earn 30%</Link>
           {isAdmin && <Link to="/admin" onClick={() => setOpen(false)} className="block py-2 text-gold">Admin</Link>}
           <div className="pt-2 border-t border-white/10">
             {user ? (

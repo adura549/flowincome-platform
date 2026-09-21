@@ -7,6 +7,7 @@ import { dateShort } from "../lib/format";
 export default function Dashboard() {
   const { user, profile } = useAuth();
   const [rows, setRows] = useState([]);
+  const [certs, setCerts] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,6 +19,9 @@ export default function Dashboard() {
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
       setRows(data || []);
+      const { data: ce } = await supabase
+        .from("certificates").select("code, course_id").eq("user_id", user.id);
+      setCerts(Object.fromEntries((ce || []).map((x) => [x.course_id, x.code])));
       setLoading(false);
     })();
   }, [user]);
@@ -59,6 +63,11 @@ export default function Dashboard() {
                   <Link to={"/learn/" + c.slug} className="btn-gold text-sm py-2.5 text-center mt-auto">
                     Open course
                   </Link>
+                  {certs[c.id] && (
+                    <Link to={"/verify/" + certs[c.id]} className="text-xs text-gold hover:underline text-center mt-3">
+                      View certificate
+                    </Link>
+                  )}
                 </div>
               </div>
             );
